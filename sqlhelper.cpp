@@ -66,9 +66,9 @@ int SQLHelper::GetBuildNum(QSqlDatabase& db, int project)
         if(buildnum ==-1) buildnum = 1003;
 
         QSqlQuery query2;
-        query2.prepare("INSERT INTO BuildInfoFlex.dbo.BuildInfo (userinfo, timestamp, product, buildnum, project, version) VALUES (:userinfo, :timestamp, :product, :buildnum, :project, :version)");
+        query2.prepare("INSERT INTO BuildInfoFlex.dbo.BuildInfo (userinfo, product, buildnum, project, version) VALUES (:userinfo, :product, :buildnum, :project, :version)");
         query2.bindValue(":userinfo", "zoli@aaa");
-        query2.bindValue(":timestamp", "2020.02.17. 18:20");//QDateTime::currentDateTimeUtc()
+        //query2.bindValue("@timestamp", "2020.02.17. 18:20");//QDateTime::currentDateTimeUtc()
         query2.bindValue(":product", "PiCameraCV");
         query2.bindValue(":buildnum", buildnum);
         query2.bindValue(":project", "99");
