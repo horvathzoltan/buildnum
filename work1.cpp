@@ -1,5 +1,9 @@
 #include "work1.h"
 #include "common/logger/log.h"
+#include "sqlhelper.h"
+#include "settings.h"
+
+extern Settings _settings;
 
 Work1Params Work1::params;
 
@@ -10,16 +14,12 @@ Work1::Work1()
 
 int Work1::doWork()
 {
-    //auto a1 = params.inFile;
-    auto m = new char[40];
-    m=new char[2];
-    zInfo(QStringLiteral("params: %1, %2, %3").arg(params.inFile).arg(params.outFile).arg(params.isBackup));
-    zInfo(QStringLiteral("Work1 done"));
+    zTrace();
+    SQLHelper sqlh;
+    auto db = sqlh.Connect(_settings._sql_settings);
+    auto buildnum = sqlh.GetBuildNum(db, _settings._project);
+    zInfo(QStringLiteral("buildnum: %1").arg(buildnum));
     return 1;
 }
 
-/*
-    zTrace();
-    SQLHelper sqlh;
-    sqlh.Connect(_settings._sql_settings);
-*/
+

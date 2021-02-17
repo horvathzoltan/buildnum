@@ -2,7 +2,6 @@
 #include "common/logger/log.h"
 #include "common/helper/signalhelper/signalhelper.h"
 #include "common/coreappworker/coreappworker.h"
-
 #include "settings.h"
 #include "work1.h"
 
@@ -10,8 +9,7 @@ Settings _settings(
     {
         "QODBC",
         "BuildInfoFlex",
-        "office.logcontrol.hu",
-        9876,
+            {{"office.logcontrol.hu", 9876}, {"172.16.1.5", 1433}},
         "sa",
         "Gtr7jv8fh2"
     } );
@@ -47,8 +45,7 @@ auto main(int argc, char *argv[]) -> int
 //    Work1::params.outFile = parser.value(OPTION_OUT);
 //    Work1::params.isBackup = parser.isSet(OPTION_BACKUP);
 
-
-
+    //TODO a parser is nem kell, a paraméterek kellenek
     com::CoreAppWorker c(Work1::doWork,&a, &parser);
     c.run();
 

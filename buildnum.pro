@@ -62,9 +62,9 @@ unix:!macx:
 message(LIBS added for unix:!macx)
 LIBS += -L$$COMMON_LIBS_FULLPATH/ -llogger
 LIBS += -L$$COMMON_LIBS_FULLPATH/ -lshortguid # loggerhez kell
-#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lsignalhelper
-#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lCommandLineParserHelper
-#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lcoreappworker
+LIBS += -L$$COMMON_LIBS_FULLPATH/ -lsignalhelper
+LIBS += -L$$COMMON_LIBS_FULLPATH/ -lCommandLineParserHelper
+LIBS += -L$$COMMON_LIBS_FULLPATH/ -lcoreappworker
 #LIBS += -L$$COMMON_LIBS_FULLPATH/ -lstringhelper
 LIBS += -L$$COMMON_LIBS_FULLPATH/ -ltextfilehelper
 LIBS += -L$$COMMON_LIBS_FULLPATH/ -lfilehelper
