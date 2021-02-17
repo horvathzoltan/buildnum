@@ -47,45 +47,47 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s)
     return db;
 }
 
+void Error(const QSqlError& err)
+{
+    if(err.isValid()) zInfo(QStringLiteral("QSqlError: %1 - %2").arg(err.type()).arg(err.text()));
+}
+
 int SQLHelper::GetBuildNum(QSqlDatabase& db, int project)
 {
     if(!db.isValid()) return -1;
     int buildnum=-1;
-    volatile bool db_ok = db.open();
-    if(db_ok)
-    {
+    QSqlError lasterr;
+    QSqlQuery query(db);
+    bool isok = db.open();
+    if(!isok) {lasterr =db.lastError();goto end; }
 
-        QSqlQuery query;
-        query.exec(QStringLiteral("SELECT max(buildnum) FROM BuildInfoFlex.dbo.BuildInfo WHERE project=%1;").arg(project));
-        if(query.size())
-        {
-            query.first();
-            auto a  = query.value(0);
-            if(a.isValid()) buildnum = a.toInt()+1;
-        }
-        if(buildnum ==-1) buildnum = 1003;
+    isok = query.exec(QStringLiteral("SELECT max(buildnum) FROM BuildInfoFlex.dbo.BuildInfo WHERE project=%1;").arg(project));
+    if(!isok) {lasterr = query.lastError();goto end;}
 
-        QSqlQuery query2;
-        query2.prepare("INSERT INTO BuildInfoFlex.dbo.BuildInfo (userinfo, product, buildnum, project, version) VALUES (:userinfo, :product, :buildnum, :project, :version)");
-        query2.bindValue(":userinfo", "zoli@aaa");
-        //query2.bindValue("@timestamp", "2020.02.17. 18:20");//QDateTime::currentDateTimeUtc()
-        query2.bindValue(":product", "PiCameraCV");
-        query2.bindValue(":buildnum", buildnum);
-        query2.bindValue(":project", "99");
-        query2.bindValue(":version", "0.90");
-        auto isok = query2.exec();
-        if(!isok){
-            auto err = db.lastError().text();
-            zInfo(err);
-        }
-        db.close();
-        zInfo("sql ok");
-    }
-    else
+    if(query.size())
     {
-        auto err = db.lastError().text();
-        zInfo(err);
+        query.first();
+        auto a  = query.value(0);
+        if(a.isNull()) buildnum = 1003; else buildnum = a.toInt()+1;
     }
+    if(buildnum == -1) buildnum = 1003;
+
+    query.prepare("INSERT INTO BuildInfoFlex.dbo.BuildInfo"
+    "(version, userinfo, timestamp, product, buildnum, project, ) VALUES "
+    "(:version, :userinfo, :timestamp, :product, :buildnum, :project)");
+
+    query.bindValue(":version", "0.90");
+    query.bindValue(":userinfo", "zoli@aaa");
+    query.bindValue(":timestamp", "2020.02.17. 18:20");//QDateTime::currentDateTimeUtc()
+    query.bindValue(":product", "PiCameraCV");
+    query.bindValue(":buildnum", buildnum);
+    query.bindValue(":project", "99");
+
+    isok = query.exec();
+    if(!isok) {lasterr = query.lastError();goto end;}
+end:
+    Error(lasterr);
+    db.close();
     return buildnum;
 }
 

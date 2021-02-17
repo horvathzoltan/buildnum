@@ -1,6 +1,7 @@
 #ifndef SQLHELPER_H
 #define SQLHELPER_H
 
+#include <QVector>
 #include <QString>
 #include <QFileInfo>
 #include <QSqlDatabase>
