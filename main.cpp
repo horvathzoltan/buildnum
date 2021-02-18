@@ -3,6 +3,7 @@
 #include "common/helper/signalhelper/signalhelper.h"
 #include "common/coreappworker/coreappworker.h"
 #include "settings.h"
+#include "environment.h"
 #include "work1.h"
 
 Settings _settings(
@@ -14,12 +15,14 @@ Settings _settings(
         "Gtr7jv8fh2"
     } );
 
+Environment _environment;
+
 auto main(int argc, char *argv[]) -> int
 {
     com::helper::SignalHelper::setShutDownSignal(com::helper::SignalHelper::SIGINT_); // shut down on ctrl-c
     com::helper::SignalHelper::setShutDownSignal(com::helper::SignalHelper::SIGTERM_); // shut down on killall
 
-    zInfo(QStringLiteral("started"));
+    zInfo(QStringLiteral("started"));   
 
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationName(QStringLiteral("test1"));
@@ -49,6 +52,6 @@ auto main(int argc, char *argv[]) -> int
     com::CoreAppWorker c(Work1::doWork,&a, &parser);
     c.run();
 
-    auto e = QCoreApplication::exec();
+    auto e = QCoreApplication::exec();    
     return e;
 }

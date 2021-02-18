@@ -12,7 +12,7 @@ SQLHelper::SQLHelper()
 }
 
 //https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?view=sql-server-ver15#ubuntu
-QSqlDatabase SQLHelper::Connect(const SQLSettings& s)
+QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
 {
     QSqlDatabase db;
     const HostPort* h=nullptr;
@@ -23,7 +23,7 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s)
 
     if(h)
     {
-        db = QSqlDatabase::addDatabase(s.driver, "conn1");
+        db = QSqlDatabase::addDatabase(s.driver, name);
         auto driverdir = QStringLiteral("/opt/microsoft/msodbcsql17/lib64");
         auto driverpattern = QStringLiteral("^.*libmsodbcsql-?[1-9.so]*$");
         auto driverfi = GetMostRecent(driverdir, driverpattern);
@@ -56,13 +56,13 @@ int SQLHelper::GetBuildNum(QSqlDatabase& db, int project)
 {
     if(!db.isValid()) return -1;
     int buildnum=-1;
-    QSqlError lasterr;
+
     QSqlQuery query(db);
     bool isok = db.open();
-    if(!isok) {lasterr =db.lastError();goto end; }
+    if(!isok) {goto end; }
 
     isok = query.exec(QStringLiteral("SELECT max(buildnum) FROM BuildInfoFlex.dbo.BuildInfo WHERE project=%1;").arg(project));
-    if(!isok) {lasterr = query.lastError();goto end;}
+    if(!isok) {goto end;}
 
     if(query.size())
     {
@@ -72,23 +72,39 @@ int SQLHelper::GetBuildNum(QSqlDatabase& db, int project)
     }
     if(buildnum == -1) buildnum = 1003;
 
+end:
+    Error(query.lastError());
+    Error(db.lastError());
+    db.close();
+    return buildnum;
+}
+
+bool SQLHelper::SetBuildNum(QSqlDatabase& db, int project, const QString& user, int buildnumber)
+{
+    if(!db.isValid()) return -1;
+
+    QSqlQuery query(db);
+    bool isok = db.open();
+    if(!isok) {goto end; }
+
     query.prepare("INSERT INTO BuildInfoFlex.dbo.BuildInfo"
-    "(version, userinfo, timestamp, product, buildnum, project, ) VALUES "
+    "(version, userinfo, timestamp, product, buildnum, project) VALUES "
     "(:version, :userinfo, :timestamp, :product, :buildnum, :project)");
 
     query.bindValue(":version", "0.90");
-    query.bindValue(":userinfo", "zoli@aaa");
-    query.bindValue(":timestamp", "2020.02.17. 18:20");//QDateTime::currentDateTimeUtc()
+    query.bindValue(":userinfo", user);
+    query.bindValue(":timestamp", QDateTime::currentDateTimeUtc());
     query.bindValue(":product", "PiCameraCV");
-    query.bindValue(":buildnum", buildnum);
-    query.bindValue(":project", "99");
+    query.bindValue(":buildnum", buildnumber);
+    query.bindValue(":project", project);
 
     isok = query.exec();
-    if(!isok) {lasterr = query.lastError();goto end;}
+    if(!isok) {goto end;}
 end:
-    Error(lasterr);
+    Error(query.lastError());
+    Error(db.lastError());
     db.close();
-    return buildnum;
+    return isok;
 }
 
 

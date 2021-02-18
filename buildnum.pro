@@ -90,6 +90,7 @@ INCLUDEPATH += $$HOME/common
 DEPENDPATH += $$HOME/common
 
 SOURCES += \
+        environment.cpp \
         main.cpp \
         networkhelper.cpp \
         settings.cpp \
@@ -107,6 +108,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    environment.h \
     networkhelper.h \
     settings.h \
     sqlhelper.h \
