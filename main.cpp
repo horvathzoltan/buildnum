@@ -2,9 +2,11 @@
 #include "common/logger/log.h"
 #include "common/helper/signalhelper/signalhelper.h"
 #include "common/coreappworker/coreappworker.h"
+#include "common/helper/CommandLineParserHelper/commandlineparserhelper.h"
 #include "settings.h"
 #include "environment.h"
 #include "work1.h"
+#include "bh2.h"
 
 Settings _settings(
     {
@@ -22,10 +24,11 @@ auto main(int argc, char *argv[]) -> int
     com::helper::SignalHelper::setShutDownSignal(com::helper::SignalHelper::SIGINT_); // shut down on ctrl-c
     com::helper::SignalHelper::setShutDownSignal(com::helper::SignalHelper::SIGTERM_); // shut down on killall
 
-    zInfo(QStringLiteral("started"));   
+//    zInfo(QStringLiteral("started: %1").arg(Buildnumber::buildnum));
+    zInfo(QStringLiteral("started: %1").arg(BUILDNUMBER));
 
     QCoreApplication a(argc, argv);
-    QCoreApplication::setApplicationName(QStringLiteral("test1"));
+    QCoreApplication::setApplicationName(QStringLiteral("test12"));
 
     QCommandLineParser parser;
 
@@ -33,23 +36,23 @@ auto main(int argc, char *argv[]) -> int
     parser.addHelpOption();
     parser.addVersionOption();
 
-//    const QString OPTION_IN = QStringLiteral("input");
+    const QString OPTION_TMP = QStringLiteral("template");
 //    const QString OPTION_OUT = QStringLiteral("output");
 //    const QString OPTION_BACKUP = QStringLiteral("backup");
 
-//    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_IN, QStringLiteral("gerber file as input"));
+    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_TMP, QStringLiteral("template file"));
 //    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("csv file as output"));
 //    com::helper::CommandLineParserHelper::addOptionBool(&parser, OPTION_BACKUP, QStringLiteral("set if backup is needed"));
 
     parser.process(a);
 
 //    // statikus, számítunk arra, hogy van
-//    Work1::params.inFile = parser.value(OPTION_IN);
+    Work1::params.tmpfile = parser.value(OPTION_TMP);
 //    Work1::params.outFile = parser.value(OPTION_OUT);
 //    Work1::params.isBackup = parser.isSet(OPTION_BACKUP);
 
     //TODO a parser is nem kell, a paraméterek kellenek
-    com::CoreAppWorker c(Work1::doWork,&a, &parser);
+    com::CoreAppWorker c(Work1::doWork, &a, &parser);
     c.run();
 
     auto e = QCoreApplication::exec();    

@@ -6,9 +6,9 @@
 
 struct Work1Params{
 public:
-    QString inFile;
-    QString outFile;
-    bool isBackup;
+    QString tmpfile;
+    //QString outFile;
+    //bool isBackup;
 };
 
 class Work1

@@ -108,6 +108,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    bh2.h \
     environment.h \
     networkhelper.h \
     settings.h \
