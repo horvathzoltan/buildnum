@@ -6,7 +6,7 @@
 #include "settings.h"
 #include "environment.h"
 #include "work1.h"
-#include "bh2.h"
+#include "buildnumber.h"
 
 Settings _settings(
     {
@@ -37,18 +37,18 @@ auto main(int argc, char *argv[]) -> int
     parser.addVersionOption();
 
     const QString OPTION_TMP = QStringLiteral("template");
-//    const QString OPTION_OUT = QStringLiteral("output");
+    const QString OPTION_OUT = QStringLiteral("output");
 //    const QString OPTION_BACKUP = QStringLiteral("backup");
 
     com::helper::CommandLineParserHelper::addOption(&parser, OPTION_TMP, QStringLiteral("template file"));
-//    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("csv file as output"));
+    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("file as output"));
 //    com::helper::CommandLineParserHelper::addOptionBool(&parser, OPTION_BACKUP, QStringLiteral("set if backup is needed"));
 
     parser.process(a);
 
 //    // statikus, számítunk arra, hogy van
     Work1::params.tmpfile = parser.value(OPTION_TMP);
-//    Work1::params.outFile = parser.value(OPTION_OUT);
+    Work1::params.ofile = parser.value(OPTION_OUT);
 //    Work1::params.isBackup = parser.isSet(OPTION_BACKUP);
 
     //TODO a parser is nem kell, a paraméterek kellenek

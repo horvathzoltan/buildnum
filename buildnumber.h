@@ -1,0 +1,6 @@
+#ifndef BUILDNUMBER_H
+#define BUILDNUMBER_H
+
+#define BUILDNUMBER 1267
+
+#endif // BUILDNUMBER_H

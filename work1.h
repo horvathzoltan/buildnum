@@ -7,7 +7,7 @@
 struct Work1Params{
 public:
     QString tmpfile;
-    //QString outFile;
+    QString ofile;
     //bool isBackup;
 };
 

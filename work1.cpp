@@ -31,8 +31,13 @@ auto Work1::doWork() -> int
         auto a = com::helper::TextFileHelper::load(params.tmpfile);
         if(a.isEmpty()) return 1;
         a = a.replace("${BUILDNUMBER}", buildnum_str);
-        auto fn2 = params.tmpfile.left(params.tmpfile.length()-4);
-        com::helper::TextFileHelper::save(a, fn2);
+        auto fn2 = params.tmpfile.left(params.tmpfile.length()-4);        
+        QString of="";
+        if(params.ofile.isEmpty())
+            of = QFileInfo(fn2).fileName();
+        else
+            of = params.ofile;
+        if(com::helper::TextFileHelper::save(a, of)) zInfo(QStringLiteral("saved: ")+of)
     }
 
     return 0;
