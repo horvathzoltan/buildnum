@@ -127,3 +127,30 @@ QFileInfo SQLHelper::GetMostRecent(const QString& path, const QString& pattern)
     }
     return most_recent;
 }
+
+QVariant SQLHelper::GetProjId(QSqlDatabase &db, const QString &project_name)
+{
+    if(!db.isValid()) return -1;
+    QVariant project_id;
+
+    QSqlQuery query(db);
+    bool isok = db.open();
+    if(!isok) {goto end; }
+
+    isok = query.exec(QStringLiteral("SELECT id FROM BuildInfoFlex.dbo.Projects WHERE Name='%1';").arg(project_name));
+    if(!isok) {goto end;}
+
+    if(query.size())
+    {
+        query.first();
+        project_id= query.value(0);
+    }
+    else
+        project_id = QVariant();
+
+end:
+    Error(query.lastError());
+    Error(db.lastError());
+    db.close();
+    return project_id;
+}

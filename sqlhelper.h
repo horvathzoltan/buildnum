@@ -5,6 +5,7 @@
 #include <QString>
 #include <QFileInfo>
 #include <QSqlDatabase>
+#include <QVariant>
 
 class SQLHelper
 {
@@ -28,6 +29,8 @@ public:
     QSqlDatabase Connect(const SQLSettings& s, const QString &name);
 
     static QFileInfo GetMostRecent(const QString &path, const QString &pattern);
+
+    QVariant GetProjId(QSqlDatabase &db, const QString& project_name);
     int GetBuildNum(QSqlDatabase &db, int project);
     bool SetBuildNum(QSqlDatabase &db, int project, const QString &user, int buildnumber);
 };

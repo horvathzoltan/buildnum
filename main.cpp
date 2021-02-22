@@ -38,22 +38,28 @@ auto main(int argc, char *argv[]) -> int
 
     const QString OPTION_TMP = QStringLiteral("template");
     const QString OPTION_OUT = QStringLiteral("output");
-//    const QString OPTION_BACKUP = QStringLiteral("backup");
+    const QString OPTION_PROJNAME = QStringLiteral("project");
 
     com::helper::CommandLineParserHelper::addOption(&parser, OPTION_TMP, QStringLiteral("template file"));
     com::helper::CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("file as output"));
-//    com::helper::CommandLineParserHelper::addOptionBool(&parser, OPTION_BACKUP, QStringLiteral("set if backup is needed"));
+    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_PROJNAME, QStringLiteral("project name"));
 
     parser.process(a);
 
 //    // statikus, számítunk arra, hogy van
     Work1::params.tmpfile = parser.value(OPTION_TMP);
     Work1::params.ofile = parser.value(OPTION_OUT);
-//    Work1::params.isBackup = parser.isSet(OPTION_BACKUP);
+    Work1::params.projname = parser.value(OPTION_PROJNAME);
 
     //TODO a parser is nem kell, a paraméterek kellenek
     com::CoreAppWorker c(Work1::doWork, &a, &parser);
-    c.run();
+    volatile auto errcode = c.run();
+
+    switch(errcode)
+    {
+        case 1: zInfo("no project name use option -p name"); break;
+        case 2: zInfo("project not found"); break;
+    }
 
     auto e = QCoreApplication::exec();    
     return e;

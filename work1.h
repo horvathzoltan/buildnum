@@ -8,7 +8,7 @@ struct Work1Params{
 public:
     QString tmpfile;
     QString ofile;
-    //bool isBackup;
+    QString projname;
 };
 
 class Work1

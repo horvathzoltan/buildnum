@@ -4,6 +4,7 @@
 #include "sqlhelper.h"
 #include "settings.h"
 #include "environment.h"
+#include <QVariant>
 #include <iostream>
 
 extern Settings _settings;
@@ -15,21 +16,25 @@ Work1::Work1() = default;
 
 auto Work1::doWork() -> int
 {    
+    if(params.projname.isEmpty()) return 1;
     //zTrace();
     SQLHelper sqlh;
     static const QString CONN = QStringLiteral("conn1");
     auto db = sqlh.Connect(_settings._sql_settings, CONN);
-    auto buildnum = sqlh.GetBuildNum(db, _settings._project);    
-    auto isok = sqlh.SetBuildNum(db, _settings._project, _environment.user_at_host, buildnum);
-    if(!isok) return 0;
+    QVariant project_id_v = sqlh.GetProjId(db, params.projname);
+    if(project_id_v.isNull()) return 2;
+    int project_id = project_id_v.toInt();
+    auto buildnum = sqlh.GetBuildNum(db, project_id);
+    auto isok = sqlh.SetBuildNum(db, project_id, _environment.user_at_host, buildnum);
+    if(!isok) return 3;
     QSqlDatabase::removeDatabase(CONN);
     auto buildnum_str = QString::number(buildnum);
     std::cout << buildnum_str.toStdString() << '\n';
     zInfo(QStringLiteral("buildnum: %1").arg(buildnum));
     if(!params.tmpfile.isEmpty()){
-        if(!params.tmpfile.endsWith(".tmp")) return 1;
+        if(!params.tmpfile.endsWith(".tmp")) return 4;
         auto a = com::helper::TextFileHelper::load(params.tmpfile);
-        if(a.isEmpty()) return 1;
+        if(a.isEmpty()) return 5;
         a = a.replace("${BUILDNUMBER}", buildnum_str);
         auto fn2 = params.tmpfile.left(params.tmpfile.length()-4);        
         QString of="";

@@ -7,7 +7,7 @@ class Settings
 {
 public:
     SQLHelper::SQLSettings _sql_settings;
-    int _project = 99;
+    //int _project = 99;
 
     Settings(const SQLHelper::SQLSettings&a);
 };
