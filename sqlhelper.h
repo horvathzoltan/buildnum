@@ -33,6 +33,7 @@ public:
     QVariant GetProjId(QSqlDatabase &db, const QString& project_name);
     int GetBuildNum(QSqlDatabase &db, int project);
     bool SetBuildNum(QSqlDatabase &db, int project, const QString &user, int buildnumber, const QString &project_name);
+    static QString GetDriverName();
 };
 
 #endif // SQLHELPER_H

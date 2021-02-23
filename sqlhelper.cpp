@@ -11,6 +11,14 @@ SQLHelper::SQLHelper()
 
 }
 
+QString SQLHelper::GetDriverName(){
+    auto driverdir = QStringLiteral("/opt/microsoft/msodbcsql17/lib64");
+    auto driverpattern = QStringLiteral("^.*libmsodbcsql-?[1-9.so]*$");
+    auto driverfi = GetMostRecent(driverdir, driverpattern);
+    if(!driverfi.isFile()) return QString();
+    return driverfi.absoluteFilePath();
+}
+
 //https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?view=sql-server-ver15#ubuntu
 QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
 {
@@ -24,12 +32,9 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
     if(h)
     {
         db = QSqlDatabase::addDatabase(s.driver, name);
-        auto driverdir = QStringLiteral("/opt/microsoft/msodbcsql17/lib64");
-        auto driverpattern = QStringLiteral("^.*libmsodbcsql-?[1-9.so]*$");
-        auto driverfi = GetMostRecent(driverdir, driverpattern);
-        if(!driverfi.isFile()) return db;
-
-        auto dbname = QStringLiteral("DRIVER=%1;Server=%2,%3;Database=%4").arg(driverfi.absoluteFilePath()).arg(h->host).arg(h->port).arg(s.dbname);
+        auto driverfn = GetDriverName();
+        if(driverfn.isEmpty()) return db;
+        auto dbname = QStringLiteral("DRIVER=%1;Server=%2,%3;Database=%4").arg(driverfn).arg(h->host).arg(h->port).arg(s.dbname);
         db.setDatabaseName(dbname);
         db.setUserName(s.user);
         db.setPassword(s.password);
@@ -91,12 +96,12 @@ bool SQLHelper::SetBuildNum(QSqlDatabase& db, int project_id, const QString& use
     "(version, userinfo, timestamp, product, buildnum, project) VALUES "
     "(:version, :userinfo, :timestamp, :product, :buildnum, :project)");
 
-    query.bindValue(":version", "0.90");
-    query.bindValue(":userinfo", user);
-    query.bindValue(":timestamp", QDateTime::currentDateTimeUtc());
-    query.bindValue(":product", project_name);
-    query.bindValue(":buildnum", buildnumber);
-    query.bindValue(":project", project_id);
+    query.bindValue(QStringLiteral(":version"), "0.90");
+    query.bindValue(QStringLiteral(":userinfo"), user);
+    query.bindValue(QStringLiteral(":timestamp"), QDateTime::currentDateTimeUtc());
+    query.bindValue(QStringLiteral(":product"), project_name);
+    query.bindValue(QStringLiteral(":buildnum"), buildnumber);
+    query.bindValue(QStringLiteral(":project"), project_id);
 
     isok = query.exec();
     if(!isok) {goto end;}
