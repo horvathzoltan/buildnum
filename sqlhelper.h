@@ -32,7 +32,7 @@ public:
 
     QVariant GetProjId(QSqlDatabase &db, const QString& project_name);
     int GetBuildNum(QSqlDatabase &db, int project);
-    bool SetBuildNum(QSqlDatabase &db, int project, const QString &user, int buildnumber);
+    bool SetBuildNum(QSqlDatabase &db, int project, const QString &user, int buildnumber, const QString &project_name);
 };
 
 #endif // SQLHELPER_H

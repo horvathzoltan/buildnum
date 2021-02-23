@@ -25,12 +25,12 @@ auto Work1::doWork() -> int
     if(project_id_v.isNull()) return 2;
     int project_id = project_id_v.toInt();
     auto buildnum = sqlh.GetBuildNum(db, project_id);
-    auto isok = sqlh.SetBuildNum(db, project_id, _environment.user_at_host, buildnum);
+    auto isok = sqlh.SetBuildNum(db, project_id, _environment.user_at_host, buildnum, params.projname);
     if(!isok) return 3;
     QSqlDatabase::removeDatabase(CONN);
     auto buildnum_str = QString::number(buildnum);
     std::cout << buildnum_str.toStdString() << '\n';
-    zInfo(QStringLiteral("buildnum: %1").arg(buildnum));
+    zInfo(QStringLiteral("buildnum ver: %1").arg(buildnum));
     if(!params.tmpfile.isEmpty()){
         if(!params.tmpfile.endsWith(".tmp")) return 4;
         auto a = com::helper::TextFileHelper::load(params.tmpfile);

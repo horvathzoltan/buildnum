@@ -79,7 +79,7 @@ end:
     return buildnum;
 }
 
-bool SQLHelper::SetBuildNum(QSqlDatabase& db, int project, const QString& user, int buildnumber)
+bool SQLHelper::SetBuildNum(QSqlDatabase& db, int project_id, const QString& user, int buildnumber, const QString & project_name)
 {
     if(!db.isValid()) return -1;
 
@@ -94,9 +94,9 @@ bool SQLHelper::SetBuildNum(QSqlDatabase& db, int project, const QString& user, 
     query.bindValue(":version", "0.90");
     query.bindValue(":userinfo", user);
     query.bindValue(":timestamp", QDateTime::currentDateTimeUtc());
-    query.bindValue(":product", "PiCameraCV");
+    query.bindValue(":product", project_name);
     query.bindValue(":buildnum", buildnumber);
-    query.bindValue(":project", project);
+    query.bindValue(":project", project_id);
 
     isok = query.exec();
     if(!isok) {goto end;}
