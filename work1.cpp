@@ -22,6 +22,7 @@ auto Work1::doWork() -> int
     static const QString CONN = QStringLiteral("conn1");
     auto db = sqlh.Connect(_settings._sql_settings, CONN);
     QVariant project_id_v = sqlh.GetProjId(db, params.projname);
+    if(!project_id_v.isValid()) return 2;
     if(project_id_v.isNull()) return 2;
     int project_id = project_id_v.toInt();
     auto buildnum = sqlh.GetBuildNum(db, project_id);

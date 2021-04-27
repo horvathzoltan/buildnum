@@ -73,7 +73,8 @@ int SQLHelper::GetBuildNum(QSqlDatabase& db, int project)
     {
         query.first();
         auto a  = query.value(0);
-        if(a.isNull()) buildnum = 1003; else buildnum = a.toInt()+1;
+
+        if(!a.isValid() || a.isNull()) buildnum = 1003; else buildnum = a.toInt()+1;
     }
     if(buildnum == -1) buildnum = 1003;
 
