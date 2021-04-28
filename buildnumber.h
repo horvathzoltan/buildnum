@@ -26,5 +26,5 @@ TEMPLATE=~/buildnumber.h.tmp
 OUTPUTFILE=~/insole1/buildnumber.h
 PROJECT=pizero_mcp3008_api
 
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH ./buildnum_ -t $TEMPLATE -o $OUTPUTFILE -p $PROJECT
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH ~/buildnum_ -t $TEMPLATE -o $OUTPUTFILE -p $PROJECT
 */
