@@ -25,7 +25,9 @@ public:
         QString password;//= "Gtr7jv8fh2";
     };
 
-    SQLHelper();
+    SQLHelper(){
+
+    }
     QSqlDatabase Connect(const SQLSettings& s, const QString &name);
 
     static QFileInfo GetMostRecent(const QString &path, const QString &pattern);

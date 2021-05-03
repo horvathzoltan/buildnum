@@ -6,12 +6,9 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-SQLHelper::SQLHelper()
-{
 
-}
 
-QString SQLHelper::GetDriverName(){
+auto SQLHelper::GetDriverName() -> QString{
     auto driverdir = QStringLiteral("/opt/microsoft/msodbcsql17/lib64");
     auto driverpattern = QStringLiteral("^.*libmsodbcsql-?[1-9.so]*$");
     auto driverfi = GetMostRecent(driverdir, driverpattern);
@@ -38,16 +35,6 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
         db.setDatabaseName(dbname);
         db.setUserName(s.user);
         db.setPassword(s.password);
-        //volatile bool db_ok = db.open();
-//        if(db_ok)
-//        {
-//            zTrace();
-//        }
-//        else
-//        {
-//            auto err = db.lastError().text();
-//            zInfo(err);
-//        }
     }
     return db;
 }
