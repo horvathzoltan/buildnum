@@ -5,6 +5,8 @@
 #include <QDateTime>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QDate>
+#include <QDateTime>
 
 
 
@@ -104,7 +106,8 @@ end:
 QFileInfo SQLHelper::GetMostRecent(const QString& path, const QString& pattern)
 {
     QFileInfo most_recent;
-    auto tstamp = QDateTime(QDate(1980,1,1));// ::currentDateTimeUtc().addYears(-1);//f1.lastModified();
+    static const QDate d1 = QDate(1980,1,1);
+    QDateTime tstamp = d1.startOfDay(Qt::UTC);// ::currentDateTimeUtc().addYears(-1);//f1.lastModified();
     QRegularExpression re(pattern);
 
     QDirIterator it(path);
