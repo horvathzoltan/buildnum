@@ -17,6 +17,8 @@ public:
     Work1();
     static int doWork();
     static Work1Params params;
+private:
+    static int getBuildNum(const QString& conn, int *b);
 };
 
 #endif // WORK1_H

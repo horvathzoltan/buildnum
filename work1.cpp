@@ -17,17 +17,11 @@ Work1::Work1() = default;
 auto Work1::doWork() -> int
 {    
     if(params.projname.isEmpty()) return 1;
-    //zTrace();
-    SQLHelper sqlh;
+
     static const QString CONN = QStringLiteral("conn1");
-    auto db = sqlh.Connect(_settings._sql_settings, CONN);
-    QVariant project_id_v = sqlh.GetProjId(db, params.projname);
-    if(!project_id_v.isValid()) return 2;
-    if(project_id_v.isNull()) return 2;
-    int project_id = project_id_v.toInt();
-    auto buildnum = sqlh.GetBuildNum(db, project_id);
-    auto isok = sqlh.SetBuildNum(db, project_id, _environment.user_at_host, buildnum, params.projname);
-    if(!isok) return 3;
+    int buildnum;
+    auto err = getBuildNum(CONN, &buildnum);
+    if(err) return err;
     QSqlDatabase::removeDatabase(CONN);
     auto buildnum_str = QString::number(buildnum);
     std::cout << buildnum_str.toStdString() << '\n';
@@ -49,4 +43,20 @@ auto Work1::doWork() -> int
     return 0;
 }
 
+
+auto Work1::getBuildNum(const QString& conn, int *b) -> int
+{
+    SQLHelper sqlh;
+    auto db = sqlh.Connect(_settings._sql_settings, conn);
+    QVariant project_id_v = sqlh.GetProjId(db, params.projname);
+    if(!project_id_v.isValid()) return 2;
+    if(project_id_v.isNull()) return 2;
+    int project_id = project_id_v.toInt();
+    auto buildnum = sqlh.GetBuildNum(db, project_id);
+    auto isok = sqlh.SetBuildNum(db, project_id, _environment.user_at_host, buildnum, params.projname);
+    if(!isok) return 3;
+
+    if(b) *b = buildnum;
+    return 0;
+}
 

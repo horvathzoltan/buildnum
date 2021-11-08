@@ -7,6 +7,7 @@
 #include <QSqlError>
 #include <QDate>
 #include <QDateTime>
+#include <QTcpSocket>
 
 
 
@@ -25,11 +26,31 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
     const HostPort* h=nullptr;
     for(auto&i:s.hosts)
     {
-        if(NetworkHelper::Ping(i.host)) {h=&(i);break;}
+        zInfo("host: "+i.host+":"+QString::number(i.port));
+        if(NetworkHelper::Ping(i.host)) {
+            zInfo("ping ok");
+            QTcpSocket s;
+            s.connectToHost(i.host, i.port);
+            auto isok = s.waitForConnected(1000);
+            if(isok){
+                s.disconnectFromHost();
+                if (s.state() != QAbstractSocket::UnconnectedState) s.waitForDisconnected();
+                h=&(i);
+                zInfo("socket ok");
+                break;
+            }
+            else{
+                zInfo("socket err");
+            }
+        }
+        else{
+            zInfo("ping err");
+        }
     }
 
     if(h)
     {
+        zInfo("available host found: "+h->host+":"+QString::number(h->port));
         db = QSqlDatabase::addDatabase(s.driver, name);
         auto driverfn = GetDriverName();
         if(driverfn.isEmpty()) return db;
