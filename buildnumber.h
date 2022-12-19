@@ -28,3 +28,11 @@ PROJECT=pizero_mcp3008_api
 
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH ~/buildnum_ -t $TEMPLATE -o $OUTPUTFILE -p $PROJECT
 */
+
+/*
+.pro file
+
+TARGET = PiCameraCV
+message( "TARGET = "$$TARGET )
+DEFINES += QT_TARGET='\\"$$TARGET\\"'
+*/
