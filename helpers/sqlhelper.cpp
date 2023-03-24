@@ -11,7 +11,7 @@
 #include <QRegularExpression>
 
 auto SQLHelper::GetDriverName() -> QString{
-    ///opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.10.so.2.1
+    //opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.10.so.2.1
     auto driverdir = QStringLiteral("/opt/microsoft/msodbcsql17/lib64");
     auto driverpattern = QStringLiteral("^.*libmsodbcsql-?[0-9.so]*$");
     auto driverfi = GetMostRecent(driverdir, driverpattern);
@@ -54,7 +54,8 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
         db = QSqlDatabase::addDatabase(s.driver, name);
         auto driverfn = GetDriverName();
         if(driverfn.isEmpty()) return db;
-        auto dbname = QStringLiteral("DRIVER=%1;Server=%2,%3;Database=%4").arg(driverfn).arg(h->host).arg(h->port).arg(s.dbname);
+        auto dbname = QStringLiteral("DRIVER=%1;Server=%2,%3;Database=%4")
+                .arg(driverfn,h->host).arg(h->port).arg(s.dbname);
         db.setDatabaseName(dbname);
         db.setUserName(s.user);
         db.setPassword(s.password);
