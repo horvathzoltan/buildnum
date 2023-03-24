@@ -1,6 +1,6 @@
 #include "sqlhelper.h"
 #include "networkhelper.h"
-#include "common/logger/log.h"
+#include "helpers/logger.h"
 #include <QDirIterator>
 #include <QDateTime>
 #include <QSqlQuery>
@@ -8,8 +8,7 @@
 #include <QDate>
 #include <QDateTime>
 #include <QTcpSocket>
-
-
+#include <QRegularExpression>
 
 auto SQLHelper::GetDriverName() -> QString{
     auto driverdir = QStringLiteral("/opt/microsoft/msodbcsql17/lib64");
@@ -26,9 +25,9 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
     const HostPort* h=nullptr;
     for(auto&i:s.hosts)
     {
-        zInfo("host: "+i.host+":"+QString::number(i.port));
+        //zInfo("host: "+i.host+":"+QString::number(i.port));
         if(NetworkHelper::Ping(i.host)) {
-            zInfo("ping ok");
+            zInfo("reachable: "+i.host+":"+QString::number(i.port));
             QTcpSocket s;
             s.connectToHost(i.host, i.port);
             auto isok = s.waitForConnected(1000);
@@ -44,7 +43,7 @@ QSqlDatabase SQLHelper::Connect(const SQLSettings& s, const QString& name)
             }
         }
         else{
-            zInfo("ping err");
+            zInfo("unreachable:"+i.host);
         }
     }
 

@@ -1,8 +1,9 @@
 #include <QCoreApplication>
-#include "common/logger/log.h"
-#include "common/helper/signalhelper/signalhelper.h"
-#include "common/coreappworker/coreappworker.h"
-#include "common/helper/CommandLineParserHelper/commandlineparserhelper.h"
+#include "helpers/logger.h"
+#include "helpers/signalhelper.h"
+#include "helpers/commandlineparserhelper.h"
+#include "helpers/coreappworker.h"
+
 #include "settings.h"
 #include "environment.h"
 #include "work1.h"
@@ -21,10 +22,10 @@ Environment _environment;
 
 auto main(int argc, char *argv[]) -> int
 {
-    com::helper::SignalHelper::setShutDownSignal(com::helper::SignalHelper::SIGINT_); // shut down on ctrl-c
-    com::helper::SignalHelper::setShutDownSignal(com::helper::SignalHelper::SIGTERM_); // shut down on killall
+    SignalHelper::setShutDownSignal(SignalHelper::SIGINT_); // shut down on ctrl-c
+    SignalHelper::setShutDownSignal(SignalHelper::SIGTERM_); // shut down on killall
+    Logger::Init(Logger::ErrLevel::INFO, Logger::DbgLevel::TRACE, true, true);
 
-//    zInfo(QStringLiteral("started: %1").arg(Buildnumber::buildnum));
     zInfo(QStringLiteral("started: %1").arg(BUILDNUMBER));
 
     QCoreApplication a(argc, argv);
@@ -40,9 +41,9 @@ auto main(int argc, char *argv[]) -> int
     const QString OPTION_OUT = QStringLiteral("output");
     const QString OPTION_PROJNAME = QStringLiteral("project");
 
-    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_TMP, QStringLiteral("template file"));
-    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("file as output"));
-    com::helper::CommandLineParserHelper::addOption(&parser, OPTION_PROJNAME, QStringLiteral("project name"));
+    CommandLineParserHelper::addOption(&parser, OPTION_TMP, QStringLiteral("template file"));
+    CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("file as output"));
+    CommandLineParserHelper::addOption(&parser, OPTION_PROJNAME, QStringLiteral("project name"));
 
     parser.process(a);
 
@@ -52,7 +53,7 @@ auto main(int argc, char *argv[]) -> int
     Work1::params.projname = parser.value(OPTION_PROJNAME);
 
     //TODO a parser is nem kell, a paraméterek kellenek
-    com::CoreAppWorker c(Work1::doWork, &a, &parser);
+    CoreAppWorker c(Work1::doWork, &a, &parser);
     volatile auto errcode = c.run();
 
     switch(errcode)

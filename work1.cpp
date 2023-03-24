@@ -1,7 +1,7 @@
 #include "work1.h"
-#include "common/logger/log.h"
-#include "common/helper/textfilehelper/textfilehelper.h"
-#include "sqlhelper.h"
+#include "helpers/logger.h"
+#include "helpers/sqlhelper.h"
+#include "helpers/textfilehelper.h"
 #include "settings.h"
 #include "environment.h"
 #include <QVariant>
@@ -26,18 +26,28 @@ auto Work1::doWork() -> int
     auto buildnum_str = QString::number(buildnum);
     std::cout << buildnum_str.toStdString() << '\n';
     zInfo(QStringLiteral("buildnum ver: %1").arg(buildnum));
-    if(!params.tmpfile.isEmpty()){
-        if(!params.tmpfile.endsWith(".tmp")) return 4;
-        auto a = com::helper::TextFileHelper::load(params.tmpfile);
-        if(a.isEmpty()) return 5;
-        a = a.replace("${BUILDNUMBER}", buildnum_str);
-        auto fn2 = params.tmpfile.left(params.tmpfile.length()-4);        
-        QString of="";
-        if(params.ofile.isEmpty())
-            of = QFileInfo(fn2).fileName();
-        else
-            of = params.ofile;
-        if(com::helper::TextFileHelper::save(a, of)) zInfo(QStringLiteral("saved: ")+of)
+    if(!params.tmpfile.endsWith(".tmp")) return 4;
+    if(params.tmpfile.isEmpty()) return 4;
+    QString a;
+    bool loaded = TextFileHelper::Load(params.tmpfile, &a);
+    if(!loaded){
+        zInfo(QStringLiteral("load failed: ")+params.tmpfile);
+        return 4;
+    }
+
+    if(a.isEmpty()) return 5;
+    a = a.replace("${BUILDNUMBER}", buildnum_str);
+    auto fn2 = params.tmpfile.left(params.tmpfile.length()-4);
+    QString of="";
+    if(params.ofile.isEmpty())
+        of = QFileInfo(fn2).fileName();
+    else
+        of = params.ofile;
+
+    bool saved = TextFileHelper::Save(a, of);
+    if(!saved){
+        zInfo(QStringLiteral("save failed: ")+of)
+        return 4;
     }
 
     return 0;
@@ -53,7 +63,8 @@ auto Work1::getBuildNum(const QString& conn, int *b) -> int
     if(project_id_v.isNull()) return 2;
     int project_id = project_id_v.toInt();
     auto buildnum = sqlh.GetBuildNum(db, project_id);
-    auto isok = sqlh.SetBuildNum(db, project_id, _environment.user_at_host, buildnum, params.projname);
+    auto uah = Environment::UserAtHost();
+    auto isok = sqlh.SetBuildNum(db, project_id, uah, buildnum, params.projname);
     if(!isok) return 3;
 
     if(b) *b = buildnum;

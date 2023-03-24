@@ -1,12 +1,5 @@
 #include "environment.h"
-#include "common/helper/ProcessHelper/processhelper.h"
-
-Environment::Environment()
-{
-
-}
-
-QString Environment::user_at_host  = UserAtHost();
+#include "helpers/processhelper.h"
 
 QString Environment::User()
 {
@@ -14,9 +7,8 @@ QString Environment::User()
     if (!l.isEmpty()) return l;
     l = qgetenv("USERNAME");
     if (!l.isEmpty()) return l;
-#ifdef Q_OS_UNIX
-    auto cmd = "whoami";
-    auto r = com::helper::ProcessHelper::Execute(cmd);
+#ifdef Q_OS_UNIX    
+    auto r = ProcessHelper::Execute(QStringLiteral("whoami"));
     if(!r.stdErr.isEmpty()) return QString();
     l = r.stdOut.trimmed();
 #endif

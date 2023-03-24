@@ -59,18 +59,18 @@ contains(QMAKESPEC,.*linux-rasp-pi\d*-.*){
 #unix:!macx: LIBS += -L/home/zoli/build-common-Desktop_Qt_5_12_2_GCC_64bit2-Debug/stringhelper/ -lstringhelper
 unix:!macx:
 {
-message(LIBS added for unix:!macx)
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -llogger
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -lshortguid # loggerhez kell
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -lsignalhelper
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -lCommandLineParserHelper
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -lcoreappworker
-#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lstringhelper
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -ltextfilehelper
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -lfilehelper
-#LIBS += -L$$COMMON_LIBS_FULLPATH/ -ldownloadhelper
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -lprocesshelper
-LIBS += -L$$COMMON_LIBS_FULLPATH/ -lmacrofactory
+#message(LIBS added for unix:!macx)
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -llogger
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lshortguid # loggerhez kell
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lsignalhelper
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lCommandLineParserHelper
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lcoreappworker
+##LIBS += -L$$COMMON_LIBS_FULLPATH/ -lstringhelper
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -ltextfilehelper
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lfilehelper
+##LIBS += -L$$COMMON_LIBS_FULLPATH/ -ldownloadhelper
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lprocesshelper
+#LIBS += -L$$COMMON_LIBS_FULLPATH/ -lmacrofactory
 
 #LIBS += -L$$COMMON_LIBS_FULLPATH/ -linihelper
 #LIBS += -L$$COMMON_LIBS_FULLPATH/ -lsettingshelper
@@ -86,16 +86,37 @@ LIBS += -L$$COMMON_LIBS_FULLPATH/ -lmacrofactory
 #QMAKE_LFLAGS += -Wl,-rpath,"/home/zoli/build-common-Desktop_Qt_5_12_2_GCC_64bit2-Debug/stringhelper"
 #QMAKE_LFLAGS += -Wl,-rpath,"/home/zoli/build-common-Desktop_Qt_5_12_2_GCC_64bit2-Debug/macrofactory"
 #INCLUDEPATH += $$HOME/common
-INCLUDEPATH += $$HOME/common
-DEPENDPATH += $$HOME/common
+#INCLUDEPATH += $$HOME/common
+#DEPENDPATH += $$HOME/common
 
 SOURCES += \
         environment.cpp \
+        helpers/commandlineparserhelper.cpp \
+        helpers/coreappworker.cpp \
+        helpers/logger.cpp \
+        helpers/processhelper.cpp \
+        helpers/textfilehelper.cpp \
         main.cpp \
-        networkhelper.cpp \
+        helpers/networkhelper.cpp \
         settings.cpp \
-        sqlhelper.cpp \
+        helpers/sqlhelper.cpp \
+        helpers/signalhelper.cpp \
         work1.cpp
+
+HEADERS += \
+    buildnumber.h \
+    environment.h \
+    helpers/commandlineparserhelper.h \
+    helpers/coreappworker.h \
+    helpers/logger.h \
+    helpers/networkhelper.h \
+    helpers/processhelper.h \
+    helpers/textfilehelper.h \
+    settings.h \
+    helpers/sqlhelper.h \
+    helpers/signalhelper.h \
+    work1.h
+
 
 unix:rpi:{
 message(LIBS added for raspberry_pi)
@@ -107,10 +128,3 @@ else: unix:rpi: target.path = /home/pi/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    buildnumber.h \
-    environment.h \
-    networkhelper.h \
-    settings.h \
-    sqlhelper.h \
-    work1.h

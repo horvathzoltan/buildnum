@@ -3,18 +3,12 @@
 
 #include <QString>
 
-
-
 class Environment
 {
 public:
-    Environment();
-
-    static QString user_at_host;
-
-    static QString Host();
-    static QString UserAtHost();
+    static QString Host();    
     static QString User();
+    static QString UserAtHost();
 };
 
 #endif // ENVIRONMENT_H

@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 #include <QString>
-#include "sqlhelper.h"
+#include "helpers/sqlhelper.h"
 
 class Settings
 {
