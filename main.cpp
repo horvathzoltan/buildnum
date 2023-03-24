@@ -9,6 +9,9 @@
 #include "work1.h"
 #include "buildnumber.h"
 
+// projects/run/CommandLineArguments
+// -p buildnumber
+
 Settings _settings(
     {
         "QODBC",

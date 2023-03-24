@@ -11,8 +11,9 @@
 #include <QRegularExpression>
 
 auto SQLHelper::GetDriverName() -> QString{
+    ///opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.10.so.2.1
     auto driverdir = QStringLiteral("/opt/microsoft/msodbcsql17/lib64");
-    auto driverpattern = QStringLiteral("^.*libmsodbcsql-?[1-9.so]*$");
+    auto driverpattern = QStringLiteral("^.*libmsodbcsql-?[0-9.so]*$");
     auto driverfi = GetMostRecent(driverdir, driverpattern);
     if(!driverfi.isFile()) return QString();
     return driverfi.absoluteFilePath();
