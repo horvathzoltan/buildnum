@@ -9,6 +9,24 @@
 #include "work1.h"
 #include "buildnumber.h"
 
+/*
+sql elérés megjavítása
+/opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.10.so.2.1
+sql tool telepítése
+https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?view=sql-server-ver15#ubuntu
+
+
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+sudo apt-get update
+sudo apt-get install mssql-tools unixodbc-dev
+sudo apt-get update
+sudo apt-get install mssql-tools
+echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+source ~/.bashrc
+*/
+
 // projects/run/CommandLineArguments
 // -p buildnumber
 
