@@ -30,6 +30,14 @@ source ~/.bashrc
 // projects/run/CommandLineArguments
 // -p buildnumber
 
+// projects/run/CommandLineArguments
+/*
+Custom Process Step: buildnum_ -t /home/zoli/buildnumber.h.tmp -o buildnumber.h -p Insole2
+Command: ~/buildnum_
+Arguments: -t ~/buildnumber.h.tmp -o buildnumber.h -p Insole2
+Working directory: %{sourceDir}
+*/
+
 Settings _settings(
     {
         "QODBC",
