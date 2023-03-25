@@ -32,9 +32,15 @@ source ~/.bashrc
 
 // projects/run/CommandLineArguments
 /*
-Custom Process Step: buildnum_ -t /home/zoli/buildnumber.h.tmp -o buildnumber.h -p Insole2
+buildnum build:
+-p buildnumber -t %{sourceDir}/buildnumber.h
+*/
+
+/*
+Insole02 build:
+Custom Process Step: buildnum_ -t /home/zoli/buildnumber.h.tmp -o buildnumber.h -p Insole02
 Command: ~/buildnum_
-Arguments: -t ~/buildnumber.h.tmp -o buildnumber.h -p Insole2
+Arguments: -t ~/buildnumber.h.tmp -o buildnumber.h -p Insole02
 Working directory: %{sourceDir}
 */
 
