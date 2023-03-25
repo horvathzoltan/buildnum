@@ -25,7 +25,7 @@ auto Work1::doWork() -> int
     QSqlDatabase::removeDatabase(CONN);
     auto buildnum_str = QString::number(buildnum);
     std::cout << buildnum_str.toStdString() << '\n';
-    zInfo(QStringLiteral("buildnum ver: %1").arg(buildnum));
+    zInfo(QStringLiteral("%1:%2").arg(params.projname).arg(buildnum));
     if(!params.tmpfile.endsWith(".tmp")) return 4;
     if(params.tmpfile.isEmpty()) return 4;
     QString a;
