@@ -9,6 +9,7 @@ public:
     QString tmpfile;
     QString ofile;
     QString projname;
+    QString deploy;
 };
 
 class Work1
@@ -26,6 +27,7 @@ private:
     static const QString _template;
     static const QRegularExpression _regexp1;
     static int getBuildNum(const QString& conn, int *b);
+    static bool DeployBuildnum(const QString& deploy, const QString bn);
 };
 
 #endif // WORK1_H

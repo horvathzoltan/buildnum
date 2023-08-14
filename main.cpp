@@ -75,10 +75,12 @@ auto main(int argc, char *argv[]) -> int
     const QString OPTION_TMP = QStringLiteral("template");
     const QString OPTION_OUT = QStringLiteral("output");
     const QString OPTION_PROJNAME = QStringLiteral("project");
+    const QString OPTION_DEPLOY = QStringLiteral("deploy");
 
     CommandLineParserHelper::addOption(&parser, OPTION_TMP, QStringLiteral("template file"));
     CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("file as output"));
     CommandLineParserHelper::addOption(&parser, OPTION_PROJNAME, QStringLiteral("project name"));
+    CommandLineParserHelper::addOption(&parser, OPTION_DEPLOY, QStringLiteral("deploy dir"));
 
     parser.process(a);
 
@@ -86,6 +88,7 @@ auto main(int argc, char *argv[]) -> int
     Work1::params.tmpfile = parser.value(OPTION_TMP);
     Work1::params.ofile = parser.value(OPTION_OUT);
     Work1::params.projname = parser.value(OPTION_PROJNAME);
+    Work1::params.deploy = parser.value(OPTION_DEPLOY);
 
     //TODO a parser is nem kell, a paraméterek kellenek
     CoreAppWorker c(Work1::doWork, &a, &parser);
