@@ -11,7 +11,7 @@
 
 /*
 git rm -rf --cached .
-
+git rm --cached *.pro.*
 git commit -m ".gitignore is now working"
 
 */
