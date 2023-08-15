@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "environment.h"
 #include <QCoreApplication>
+#include <QDir>
 #include <QRegularExpression>
 #include <QVariant>
 #include <iostream>
@@ -59,6 +60,9 @@ auto Work1::doWork() -> int
         } else {
             BuildNum2(params.tmpfile, buildnum_str);
         }
+    }
+    if(!params.deploy.isEmpty()){
+        DeployBuildnum(params.deploy, buildnum_str);
     }
     return 0;
 }
@@ -127,5 +131,23 @@ auto Work1::getBuildNum(const QString& conn, int *b) -> int
 
     if(b) *b = buildnum;
     return 0;
+}
+
+bool Work1::DeployBuildnum(const QString& deploy, const QString buildnumber)
+{
+    if(deploy.isEmpty()) return false;
+    if(buildnumber.isEmpty()) return false;
+
+    QDir deploy_dir(deploy);
+    if(!deploy_dir.exists()) return false;
+
+    QString fn = deploy_dir.absoluteFilePath("buildnumber.txt");
+
+    bool saved = TextFileHelper::Save(buildnumber, fn);
+    if(!saved){
+        zInfo(QStringLiteral("save failed: ")+TextFileHelper::LastError());
+        return false;
+    }
+    return true;
 }
 
