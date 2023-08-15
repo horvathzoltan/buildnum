@@ -1,4 +1,4 @@
-#include "sqlhelper.h"
+#include "helpers/sqlhelper.h"
 #include "networkhelper.h"
 #include "helpers/logger.h"
 #include <QDirIterator>
