@@ -1,18 +1,32 @@
 #ifndef BUILDNUMBER_H
 #define BUILDNUMBER_H
 
-#define BUILDNUMBER 1022
+#define BUILDNUMBER 1032
 
 #include <QString>
 
-struct Buildnumber{ static QString toString(); };
-
-#endif // BUILDNUMBER_H
+class Buildnumber{
+public:
+    static const QString _value;
+private:
+    static QString GetValue();
+};
 
 /*
 // buildnumber.cpp should contain this lines below to forcing build with makefile depencencies
+// usage:
+// QCoreApplication::setApplicationVersion(Buildnumber::_value);
+// zInfo(QStringLiteral("started ")+target+" as "+user + " build:"+ Buildnumber::_value);
+
 #include <QString>
 #include "buildnumber.h"
 
-QString Buildnumber::toString(){return QString::number(BUILDNUMBER);}
+const QString Buildnumber::_value = GetValue();
+
+QString Buildnumber::GetValue()
+{
+    return QString::number(BUILDNUMBER);
+}
 */
+
+#endif // BUILDNUMBER_H

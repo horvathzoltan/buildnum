@@ -119,7 +119,7 @@ bool Work1::BuildNum2(const QString& tmpFile, const QString& buildnum_str){
 auto Work1::getBuildNum(const QString& conn, int *b) -> int
 {
     SQLHelper sqlh;
-    auto db = sqlh.Connect(_settings._sql_settings, conn);
+    auto db = sqlh.Connect(_settings._sql_settings, conn, params.sql_timeout);
     QVariant project_id_v = sqlh.GetProjId(db, params.projname);
     if(!project_id_v.isValid()) return 2;
     if(project_id_v.isNull()) return 2;

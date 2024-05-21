@@ -3,6 +3,7 @@
 #include "helpers/signalhelper.h"
 #include "helpers/commandlineparserhelper.h"
 #include "helpers/coreappworker.h"
+#include "helpers/stringify.h"
 
 #include "settings.h"
 #include "environment.h"
@@ -42,6 +43,8 @@ Custom Process Step: buildnum_ -t /home/zoli/buildnumber.h.tmp -o buildnumber.h 
 Command: ~/buildnum_
 Arguments: -t ~/buildnumber.h.tmp -o buildnumber.h -p Insole02
 Working directory: %{sourceDir}
+
+-p buildnumber -t %{sourceDir}/buildnumber.h -d %{buildDir} -s 5000
 */
 
 Settings _settings(
@@ -57,11 +60,18 @@ Environment _environment;
 
 auto main(int argc, char *argv[]) -> int
 {
+#if defined (STRINGIFY_H) && defined (STRING) && defined (TARGI)
+    QString target = STRING(TARGI);
+#else
+    auto target=QStringLiteral("ApplicationNameString");
+#endif
+
     SignalHelper::setShutDownSignal(SignalHelper::SIGINT_); // shut down on ctrl-c
     SignalHelper::setShutDownSignal(SignalHelper::SIGTERM_); // shut down on killall
     Logger::Init(Logger::ErrLevel::INFO, Logger::DbgLevel::TRACE, true, true);
 
-    zInfo(QStringLiteral("started: %1").arg(BUILDNUMBER));
+    QString user = qgetenv("USER");
+    zInfo(QStringLiteral("started ")+target+" as "+user + " build:"+ Buildnumber::_value);
 
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationName(QStringLiteral("test12"));
@@ -76,11 +86,13 @@ auto main(int argc, char *argv[]) -> int
     const QString OPTION_OUT = QStringLiteral("output");
     const QString OPTION_PROJNAME = QStringLiteral("project");
     const QString OPTION_DEPLOY = QStringLiteral("deploy");
+    const QString OPTION_TIMEOUT = QStringLiteral("sqltimeout");
 
     CommandLineParserHelper::addOption(&parser, OPTION_TMP, QStringLiteral("template file"));
     CommandLineParserHelper::addOption(&parser, OPTION_OUT, QStringLiteral("file as output"));
     CommandLineParserHelper::addOption(&parser, OPTION_PROJNAME, QStringLiteral("project name"));
     CommandLineParserHelper::addOption(&parser, OPTION_DEPLOY, QStringLiteral("deploy dir"));
+    CommandLineParserHelper::addOption(&parser, OPTION_TIMEOUT, QStringLiteral("sql timeout"));
 
     parser.process(a);
 
@@ -89,6 +101,13 @@ auto main(int argc, char *argv[]) -> int
     Work1::params.ofile = parser.value(OPTION_OUT);
     Work1::params.projname = parser.value(OPTION_PROJNAME);
     Work1::params.deploy = parser.value(OPTION_DEPLOY);
+    QString a2 = parser.value(OPTION_TIMEOUT);
+
+    bool ok;
+    int i = a2.toInt(&ok);
+    if(ok){
+        Work1::params.sql_timeout = i;
+    }
 
     //TODO a parser is nem kell, a paraméterek kellenek
     CoreAppWorker c(Work1::doWork, &a, &parser);

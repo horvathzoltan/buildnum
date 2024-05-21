@@ -10,6 +10,7 @@ public:
     QString ofile;
     QString projname;
     QString deploy;
+    int sql_timeout = 1000;
 };
 
 class Work1

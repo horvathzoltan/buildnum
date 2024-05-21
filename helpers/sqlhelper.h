@@ -28,7 +28,7 @@ public:
     SQLHelper(){
 
     }
-    QSqlDatabase Connect(const SQLSettings& s, const QString &name);
+    QSqlDatabase Connect(const SQLSettings& s, const QString &name, int timeout);
 
     static QFileInfo GetMostRecent(const QString &path, const QString &pattern);
 
