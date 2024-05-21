@@ -11,6 +11,11 @@
 #include "buildnumber.h"
 
 /*
+git rm -rf --cached .
+git rm --cached *.pro.*
+git commit -m ".gitignore is now working"
+*/
+/*
 sql elérés megjavítása
 /opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.10.so.2.1
 sql tool telepítése
